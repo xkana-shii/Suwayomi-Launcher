@@ -52,7 +52,8 @@ class LauncherViewModel {
         if (tachideskServer.notExists()) {
             runBlocking {
                 logger.info { "Suwayomi-Server.jar not found, downloading..." }
-                ServerUpdater.updateServerJar(tachideskServer)
+                ServerUpdater
+                    .updateServerJar(tachideskServer)
                     .onFailure {
                         error("Could not find or download Suwayomi-Server.jar: ${it.message}")
                     }
