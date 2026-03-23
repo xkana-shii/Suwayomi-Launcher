@@ -14,3 +14,5 @@ gradle.properties
 
 # Ignore Gradle build output directory
 build
+gradle/gradle-daemon-jvm.properties
+local.properties
