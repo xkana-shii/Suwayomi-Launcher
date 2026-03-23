@@ -8,11 +8,34 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - uses: actions/checkout@v6
       with:
         fetch-depth: 0
+
+    - name: Bump version
+      if: ${{ github.event_name == 'push' }}
+      run: |
+        chmod +x .github/scripts/bump_version.sh
+        .github/scripts/bump_version.sh
+
+    - name: Commit version bump
+      if: ${{ github.event_name == 'push' }}
+      run: |
+        if git diff --quiet; then
+          echo "No version change detected"
+          exit 0
+        fi
+        
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        
+        git add build.gradle.kts
+        git commit -m "chore: bump version to $NEW_VN [skip ci]"
+        git push
 
     - name: Set up JDK
       uses: actions/setup-java@v5
@@ -26,14 +49,10 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew lintKotlin shadowJar
 
-    - name: Get Commit Count
-      if: ${{ github.event_name == 'push' }}
-      id: commit_count
-      run: echo "count=$(git rev-list --count HEAD)" >> $GITHUB_OUTPUT
-
     - name: Upload Release
       uses: softprops/action-gh-release@v2
       if: ${{ github.event_name == 'push' }}
       with:
-        tag_name:  ${{ steps.commit_count.outputs.count }}
+        tag_name: ${{ env.NEW_VN }}
+        name: ${{ env.NEW_VN }}
         files: build/*.jar
