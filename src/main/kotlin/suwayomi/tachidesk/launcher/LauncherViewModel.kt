@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import suwayomi.tachidesk.launcher.config.ConfigManager
 import suwayomi.tachidesk.launcher.config.DownloadConversionType
 import suwayomi.tachidesk.launcher.config.DurationType
@@ -48,6 +49,17 @@ class LauncherViewModel {
     private val scope = MainScope()
 
     init {
+        if (tachideskServer.notExists()) {
+            runBlocking {
+                logger.info { "Suwayomi-Server.jar not found, downloading..." }
+                ServerUpdater.updateServerJar(tachideskServer)
+                    .onFailure {
+                        error("Could not find or download Suwayomi-Server.jar: ${it.message}")
+                    }
+                logger.info { "Server jar downloaded successfully" }
+            }
+        }
+
         require(tachideskServer.exists()) {
             "Could not find Suwayomi-Server.jar at '${tachideskServer.absolutePathString()}'"
         }
@@ -277,7 +289,7 @@ class LauncherViewModel {
     private fun getServerConfig(rootDir: String?): ServerConfig {
         val resolvedRootDir =
             rootDir
-                ?: AppDirs { appName = "Tachidesk" }.getUserDataDir()
+                ?: AppDirs { appName = "Suwayomi" }.getUserDataDir()
 
         val configManager = ConfigManager(tachideskServer, resolvedRootDir)
 
@@ -307,7 +319,7 @@ class LauncherViewModel {
             homeDir / "bin" / "Suwayomi-Server.jar"
         }
 
-        private fun getRootDir(rootDir: String?): String = rootDir ?: AppDirs { appName = "Tachidesk" }.getUserDataDir()
+        private fun getRootDir(rootDir: String?): String = rootDir ?: AppDirs { appName = "Suwayomi" }.getUserDataDir()
 
         fun reset() {
             val settings = LauncherSettings()
