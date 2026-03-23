@@ -37,6 +37,7 @@ import suwayomi.tachidesk.launcher.ui.Opds
 import suwayomi.tachidesk.launcher.ui.Requests
 import suwayomi.tachidesk.launcher.ui.RootDir
 import suwayomi.tachidesk.launcher.ui.ServerIpAndPortBindings
+import suwayomi.tachidesk.launcher.ui.ServerUpdate
 import suwayomi.tachidesk.launcher.ui.Socks5
 import suwayomi.tachidesk.launcher.ui.Updater
 import suwayomi.tachidesk.launcher.ui.WebUI
@@ -120,6 +121,7 @@ suspend fun main(args: Array<String>) {
                         addTab("SOCKS Proxy", Socks5(vm, scope))
                         addTab("Authentication", Auth(vm, scope))
                         addTab("WebUI", WebUI(vm, scope))
+                        addTab("Server Update", ServerUpdate(vm, scope))
                         addTab("Updater", Updater(vm, scope))
                         addTab("Downloader", Downloader(vm, scope))
                         addTab("Conversions", Conversions(vm, scope))
