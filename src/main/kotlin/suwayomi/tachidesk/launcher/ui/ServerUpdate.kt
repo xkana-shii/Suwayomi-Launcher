@@ -11,13 +11,17 @@ import net.miginfocom.layout.LC
 import net.miginfocom.swing.MigLayout
 import suwayomi.tachidesk.launcher.LauncherViewModel
 import suwayomi.tachidesk.launcher.ServerUpdater
+import suwayomi.tachidesk.launcher.UpdateChannel
 import suwayomi.tachidesk.launcher.actions
 import suwayomi.tachidesk.launcher.bind
 import suwayomi.tachidesk.launcher.jTextArea
 import suwayomi.tachidesk.launcher.jbutton
 import suwayomi.tachidesk.launcher.jpanel
 import java.nio.file.Paths
+import javax.swing.DefaultComboBoxModel
+import javax.swing.JComboBox
 import javax.swing.JOptionPane
+
 
 @Suppress("ktlint:standard:function-naming")
 fun ServerUpdate(
@@ -32,6 +36,14 @@ fun ServerUpdate(
         isEditable = false
     }.bind(CC().spanX().wrap())
 
+    // Combo box for update channel
+    val channelCombo = JComboBox(DefaultComboBoxModel(UpdateChannel.entries.toTypedArray()))
+    channelCombo.selectedItem = vm.updateChannel.value
+    channelCombo.addActionListener {
+        vm.updateChannel.value = channelCombo.selectedItem as UpdateChannel
+    }
+    add(channelCombo, CC().spanX().wrap())
+
     jbutton("Update Server .jar from GitHub Release") {
         toolTipText = "Downloads and replaces the Suwayomi-Server.jar with the latest release from GitHub"
         actions()
@@ -39,7 +51,7 @@ fun ServerUpdate(
                 isEnabled = false
                 val serverJarPath = Paths.get(vm.rootDir.value ?: ".", "Suwayomi-Server.jar")
                 scope.launch(Dispatchers.IO) {
-                    val result = ServerUpdater.updateServerJar(serverJarPath)
+                    val result = ServerUpdater.updateServerJar(serverJarPath, vm.updateChannel.value)
                     launch(Dispatchers.Swing) {
                         if (result.isSuccess) {
                             JOptionPane.showMessageDialog(this@jbutton, "Update successful!\nSaved to $serverJarPath")

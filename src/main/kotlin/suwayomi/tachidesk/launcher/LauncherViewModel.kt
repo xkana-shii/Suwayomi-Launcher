@@ -48,12 +48,14 @@ import kotlin.system.exitProcess
 class LauncherViewModel {
     private val scope = MainScope()
 
+    val updateChannel = MutableStateFlow(UpdateChannel.STABLE)
+
     init {
         if (tachideskServer.notExists()) {
             runBlocking {
                 logger.info { "Suwayomi-Server.jar not found, downloading..." }
                 ServerUpdater
-                    .updateServerJar(tachideskServer)
+                    .updateServerJar(tachideskServer, updateChannel.value)
                     .onFailure {
                         error("Could not find or download Suwayomi-Server.jar: ${it.message}")
                     }
