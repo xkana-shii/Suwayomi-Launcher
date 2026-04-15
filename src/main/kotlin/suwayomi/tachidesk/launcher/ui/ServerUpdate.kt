@@ -22,7 +22,6 @@ import javax.swing.DefaultComboBoxModel
 import javax.swing.JComboBox
 import javax.swing.JOptionPane
 
-
 @Suppress("ktlint:standard:function-naming")
 fun ServerUpdate(
     vm: LauncherViewModel,
@@ -36,7 +35,6 @@ fun ServerUpdate(
         isEditable = false
     }.bind(CC().spanX().wrap())
 
-    // Combo box for update channel
     val channelCombo = JComboBox(DefaultComboBoxModel(UpdateChannel.entries.toTypedArray()))
     channelCombo.selectedItem = vm.updateChannel.value
     channelCombo.addActionListener {

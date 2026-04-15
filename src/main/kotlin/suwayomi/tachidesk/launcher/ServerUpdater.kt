@@ -15,7 +15,10 @@ object ServerUpdater {
     private val jarUrlRegex =
         """"browser_download_url"\s*:\s*"([^"]+Suwayomi-Server[^"]+\.jar)"""".toRegex()
 
-    suspend fun updateServerJar(destPath: Path, channel: UpdateChannel): Result<Unit> =
+    suspend fun updateServerJar(
+        destPath: Path,
+        channel: UpdateChannel,
+    ): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
                 val url = fetchLatestJarDownloadUrl(channel) ?: error("Download URL not found")
@@ -24,12 +27,16 @@ object ServerUpdater {
         }
 
     private fun fetchLatestJarDownloadUrl(channel: UpdateChannel): String? {
-        val releaseApiUrl = when (channel) {
-            UpdateChannel.STABLE ->
-                "https://api.github.com/repos/xkana-shii/Suwayomi-Server/releases/latest"
-            UpdateChannel.PREVIEW ->
-                "https://api.github.com/repos/xkana-shii/Suwayomi-Server-preview/releases/latest"
-        }
+        val releaseApiUrl =
+            when (channel) {
+                UpdateChannel.STABLE -> {
+                    "https://api.github.com/repos/xkana-shii/Suwayomi-Server/releases/latest"
+                }
+
+                UpdateChannel.PREVIEW -> {
+                    "https://api.github.com/repos/xkana-shii/Suwayomi-Server-preview/releases/latest"
+                }
+            }
         return Request
             .Builder()
             .url(releaseApiUrl)
