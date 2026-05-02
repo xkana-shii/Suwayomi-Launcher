@@ -99,7 +99,7 @@ suspend fun main(args: Array<String>) {
             size = Dimension(410, 600)
 
             iconImage =
-                javaClass.getResource("/icon.png")?.let {
+                javaClass.getResource("/suwayomi.png")?.let {
                     ImageIO.read(it)
                 }
 
