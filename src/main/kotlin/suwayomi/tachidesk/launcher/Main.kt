@@ -96,14 +96,14 @@ suspend fun main(args: Array<String>) {
         setupTheme(vm)
 
         jframe("Suwayomi-Server Launcher") {
-            size = Dimension(410, 600)
+            size = Dimension(410, 650)
 
-            iconImage =
-                javaClass.getResource("/suwayomi.png")?.let {
-                    ImageIO.read(it)
+            val iconUrl =
+                checkNotNull(object {}.javaClass.getResource("/suwayomi.png")) {
+                    "Missing resource: /suwayomi.png"
                 }
+            iconImage = ImageIO.read(iconUrl)
 
-            pack()
             setLocationRelativeTo(null)
             defaultCloseOperation = JFrame.EXIT_ON_CLOSE
             contentPane =
