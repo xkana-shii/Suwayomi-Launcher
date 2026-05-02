@@ -48,6 +48,7 @@ import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.util.Base64
+import javax.imageio.ImageIO
 import javax.swing.JFrame
 import javax.swing.JOptionPane
 import kotlin.system.exitProcess
@@ -96,6 +97,13 @@ suspend fun main(args: Array<String>) {
 
         jframe("Suwayomi-Server Launcher") {
             size = Dimension(410, 600)
+
+            iconImage =
+                javaClass.getResource("/icon.png")?.let {
+                    ImageIO.read(it)
+                }
+
+            pack()
             setLocationRelativeTo(null)
             defaultCloseOperation = JFrame.EXIT_ON_CLOSE
             contentPane =
