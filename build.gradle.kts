@@ -86,12 +86,25 @@ tasks {
         source(files("src/kotlin"))
     }
 
+    jar {
+        manifest {
+            attributes(
+                "Main-Class" to MainClass,
+                "Implementation-Title" to rootProject.name,
+                "Implementation-Vendor" to "The Suwayomi Project",
+                "Implementation-Version" to project.version.toString(),
+                "Specification-Version" to project.version.toString(),
+            )
+        }
+    }
+
     shadowJar {
         manifest {
             attributes(
                 "Main-Class" to MainClass,
                 "Implementation-Title" to rootProject.name,
                 "Implementation-Vendor" to "The Suwayomi Project",
+                "Implementation-Version" to project.version.toString(),
                 "Specification-Version" to project.version.toString(),
             )
         }

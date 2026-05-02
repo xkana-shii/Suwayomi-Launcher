@@ -14,6 +14,31 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Bump version
+      if: ${{ github.event_name == 'push' }}
+      run: |
+        chmod +x .github/scripts/bump_version.sh
+        .github/scripts/bump_version.sh
+
+    - name: Commit version bump
+      if: ${{ github.event_name == 'push' }}
+      run: |
+        if git diff --quiet; then
+          echo "No version change detected"
+          exit 0
+        fi
+        
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        
+        git add build.gradle.kts
+        git commit -m "chore: bump version [skip ci]"
+        git push
+
+    - name: Stop after bump commit
+      if: ${{ github.event_name == 'push' }}
+      run: exit 0
+
     - name: Set up JDK
       uses: actions/setup-java@v5
       with:
