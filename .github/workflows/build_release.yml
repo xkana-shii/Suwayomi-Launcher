@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - uses: actions/checkout@v6
@@ -32,7 +34,7 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         
         git add build.gradle.kts
-        git commit -m "chore: bump version [skip ci]"
+        git commit -m "chore: bump version to $NEW_VN [skip ci]"
         git push
 
     - name: Stop after bump commit
@@ -51,14 +53,10 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew lintKotlin shadowJar
 
-    - name: Get Commit Count
-      if: ${{ github.event_name == 'push' }}
-      id: commit_count
-      run: echo "count=$(git rev-list --count HEAD)" >> $GITHUB_OUTPUT
-
     - name: Upload Release
       uses: softprops/action-gh-release@v2
       if: ${{ github.event_name == 'push' }}
       with:
-        tag_name:  ${{ steps.commit_count.outputs.count }}
+        tag_name: ${{ env.NEW_VN }}
+        name: ${{ env.NEW_VN }}
         files: build/*.jar
