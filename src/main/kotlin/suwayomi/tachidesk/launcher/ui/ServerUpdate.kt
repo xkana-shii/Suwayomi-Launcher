@@ -47,7 +47,7 @@ fun ServerUpdate(
         actions()
             .onEach {
                 isEnabled = false
-                val serverJarPath = Paths.get(vm.rootDir.value ?: ".", "Suwayomi-Server.jar")
+                val serverJarPath = Paths.get("bin", "Suwayomi-Server.jar")
                 scope.launch(Dispatchers.IO) {
                     val result = ServerUpdater.updateServerJar(serverJarPath, vm.updateChannel.value)
                     launch(Dispatchers.Swing) {
