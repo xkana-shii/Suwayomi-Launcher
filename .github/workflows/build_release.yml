@@ -50,7 +50,7 @@ jobs:
       run: ./gradlew lintKotlin shadowJar
 
     - name: Upload Release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       if: ${{ github.event_name == 'push' }}
       with:
         tag_name: ${{ env.NEW_VN }}
