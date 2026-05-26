@@ -179,5 +179,4 @@ class ServerConfig(
 
     // server update
     val serverUpdateChannel: MutableStateFlow<UpdaterChannel> by OverrideConfigValue()
-    val autoServerUpdate: MutableStateFlow<Boolean> by OverrideConfigValue()
 }

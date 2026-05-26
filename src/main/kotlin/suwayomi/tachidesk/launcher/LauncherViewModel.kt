@@ -186,7 +186,6 @@ class LauncherViewModel {
     val kcefEnabled: MutableStateFlow<Boolean> = config.asStateFlow { it.kcefEnabled }
 
     val serverUpdateChannel = config.asStateFlow { it.serverUpdateChannel }
-    val autoServerUpdate = config.asStateFlow { it.autoServerUpdate }
 
     val theme = settings.theme().asStateFlow(scope)
 
