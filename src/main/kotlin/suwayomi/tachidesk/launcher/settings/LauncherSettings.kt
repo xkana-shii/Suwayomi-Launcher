@@ -34,6 +34,11 @@ class LauncherSettings {
         Bundled,
     }
 
+    enum class UpdaterChannel {
+        Stable,
+        Preview,
+    }
+
     enum class SortOrder {
         ASC,
         DESC,

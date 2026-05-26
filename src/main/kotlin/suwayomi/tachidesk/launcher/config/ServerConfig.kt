@@ -21,6 +21,7 @@ import suwayomi.tachidesk.launcher.settings.LauncherSettings.DatabaseType
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.KoreaderSyncChecksumMethod
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.KoreaderSyncConflictStrategy
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.SortOrder
+import suwayomi.tachidesk.launcher.settings.LauncherSettings.UpdaterChannel
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.WebUIChannel
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.WebUIFlavor
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.WebUIInterface
@@ -175,4 +176,8 @@ class ServerConfig(
 
     // webview
     val kcefEnabled: MutableStateFlow<Boolean> by OverrideConfigValue()
+
+    // server update
+    val serverUpdateChannel: MutableStateFlow<UpdaterChannel> by OverrideConfigValue()
+    val autoServerUpdate: MutableStateFlow<Boolean> by OverrideConfigValue()
 }

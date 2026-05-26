@@ -11,12 +11,12 @@ import net.miginfocom.layout.LC
 import net.miginfocom.swing.MigLayout
 import suwayomi.tachidesk.launcher.LauncherViewModel
 import suwayomi.tachidesk.launcher.ServerUpdater
-import suwayomi.tachidesk.launcher.UpdateChannel
 import suwayomi.tachidesk.launcher.actions
 import suwayomi.tachidesk.launcher.bind
 import suwayomi.tachidesk.launcher.jTextArea
 import suwayomi.tachidesk.launcher.jbutton
 import suwayomi.tachidesk.launcher.jpanel
+import suwayomi.tachidesk.launcher.settings.LauncherSettings.UpdaterChannel // Use your config enum here!
 import java.nio.file.Paths
 import javax.swing.DefaultComboBoxModel
 import javax.swing.JComboBox
@@ -35,10 +35,10 @@ fun ServerUpdate(
         isEditable = false
     }.bind(CC().spanX().wrap())
 
-    val channelCombo = JComboBox(DefaultComboBoxModel(UpdateChannel.entries.toTypedArray()))
-    channelCombo.selectedItem = vm.updateChannel.value
+    val channelCombo = JComboBox(DefaultComboBoxModel(UpdaterChannel.entries.toTypedArray()))
+    channelCombo.selectedItem = vm.serverUpdateChannel.value
     channelCombo.addActionListener {
-        vm.updateChannel.value = channelCombo.selectedItem as UpdateChannel
+        vm.serverUpdateChannel.value = channelCombo.selectedItem as UpdaterChannel
     }
     add(channelCombo, CC().spanX().wrap())
 
@@ -49,7 +49,7 @@ fun ServerUpdate(
                 isEnabled = false
                 val serverJarPath = Paths.get("bin", "Suwayomi-Server.jar")
                 scope.launch(Dispatchers.IO) {
-                    val result = ServerUpdater.updateServerJar(serverJarPath, vm.updateChannel.value)
+                    val result = ServerUpdater.updateServerJar(serverJarPath, vm.serverUpdateChannel.value)
                     launch(Dispatchers.Swing) {
                         if (result.isSuccess) {
                             JOptionPane.showMessageDialog(this@jbutton, "Update successful!\nSaved to $serverJarPath")

@@ -5,9 +5,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import suwayomi.tachidesk.launcher.settings.LauncherSettings.UpdaterChannel // Import your config-driven enum here!
 import java.nio.file.Path
-
-enum class UpdateChannel { STABLE, PREVIEW }
 
 object ServerUpdater {
     private val logger = KotlinLogging.logger {}
@@ -17,7 +16,7 @@ object ServerUpdater {
 
     suspend fun updateServerJar(
         destPath: Path,
-        channel: UpdateChannel,
+        channel: UpdaterChannel, // Use your config enum directly!
     ): Result<Unit> =
         withContext(Dispatchers.IO) {
             runCatching {
@@ -26,16 +25,11 @@ object ServerUpdater {
             }.onFailure { logger.error(it) { "Failed updating server jar" } }
         }
 
-    private fun fetchLatestJarDownloadUrl(channel: UpdateChannel): String? {
+    private fun fetchLatestJarDownloadUrl(channel: UpdaterChannel): String? {
         val releaseApiUrl =
             when (channel) {
-                UpdateChannel.STABLE -> {
-                    "https://api.github.com/repos/xkana-shii/Suwayomi-Server/releases/latest"
-                }
-
-                UpdateChannel.PREVIEW -> {
-                    "https://api.github.com/repos/xkana-shii/Suwayomi-Server-preview/releases/latest"
-                }
+                UpdaterChannel.Stable -> "https://api.github.com/repos/xkana-shii/Suwayomi-Server/releases/latest"
+                UpdaterChannel.Preview -> "https://api.github.com/repos/xkana-shii/Suwayomi-Server-preview/releases/latest"
             }
         return Request
             .Builder()

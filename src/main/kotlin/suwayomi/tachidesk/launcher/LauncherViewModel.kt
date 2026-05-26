@@ -48,17 +48,14 @@ import kotlin.system.exitProcess
 class LauncherViewModel {
     private val scope = MainScope()
 
-    val updateChannel = MutableStateFlow(UpdateChannel.STABLE)
-
     init {
-        if (tachideskServer.notExists()) {
-            runBlocking {
+        scope.launch {
+            if (tachideskServer.notExists()) {
                 logger.info { "Suwayomi-Server.jar not found, downloading..." }
-                ServerUpdater
-                    .updateServerJar(tachideskServer, updateChannel.value)
-                    .onFailure {
-                        error("Could not find or download Suwayomi-Server.jar: ${it.message}")
-                    }
+                val result = ServerUpdater.updateServerJar(tachideskServer, serverUpdateChannel.value)
+                if (result.isFailure) {
+                    error("Could not find or download Suwayomi-Server.jar: ${result.exceptionOrNull()?.message}")
+                }
                 logger.info { "Server jar downloaded successfully" }
             }
         }
@@ -187,6 +184,9 @@ class LauncherViewModel {
     val useHikariConnectionPool: MutableStateFlow<Boolean> = config.asStateFlow { it.useHikariConnectionPool }
 
     val kcefEnabled: MutableStateFlow<Boolean> = config.asStateFlow { it.kcefEnabled }
+
+    val serverUpdateChannel = config.asStateFlow { it.serverUpdateChannel }
+    val autoServerUpdate = config.asStateFlow { it.autoServerUpdate }
 
     val theme = settings.theme().asStateFlow(scope)
 
