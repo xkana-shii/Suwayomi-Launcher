@@ -25,7 +25,7 @@ buildscript {
 }
 
 group = "suwayomi.tachidesk"
-version = "1.0.10"
+version = "1.0.11"
 
 repositories {
     mavenCentral()
