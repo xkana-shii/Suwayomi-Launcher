@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import suwayomi.tachidesk.launcher.config.ConfigManager
 import suwayomi.tachidesk.launcher.config.DownloadConversionType
 import suwayomi.tachidesk.launcher.config.DurationType
@@ -44,15 +45,18 @@ class LauncherViewModel {
     private val scope = MainScope()
 
     init {
-        scope.launch {
-            if (tachideskServer.notExists()) {
-                logger.info { "Suwayomi-Server.jar not found, downloading..." }
-                val result = ServerUpdater.updateServerJar(tachideskServer, serverUpdateChannel.value)
-                if (result.isFailure) {
-                    error("Could not find or download Suwayomi-Server.jar: ${result.exceptionOrNull()?.message}")
+        // The download has to finish before the jar is required below. The configured update channel is read from the
+        // server jar itself, so a missing jar is downloaded from the default (stable) channel.
+        if (tachideskServer.notExists()) {
+            logger.info { "Suwayomi-Server.jar not found, downloading..." }
+            val result =
+                runBlocking {
+                    ServerUpdater.updateServerJar(tachideskServer, LauncherSettings.UpdaterChannel.Stable)
                 }
-                logger.info { "Server jar downloaded successfully" }
+            if (result.isFailure) {
+                error("Could not find or download Suwayomi-Server.jar: ${result.exceptionOrNull()?.message}")
             }
+            logger.info { "Server jar downloaded successfully" }
         }
 
         require(tachideskServer.exists()) {
@@ -290,7 +294,7 @@ class LauncherViewModel {
                         .toURI(),
                 ).parent
         }
-        private val tachideskServer by lazy {
+        val tachideskServer: Path by lazy {
             homeDir / "bin" / "Suwayomi-Server.jar"
         }
 

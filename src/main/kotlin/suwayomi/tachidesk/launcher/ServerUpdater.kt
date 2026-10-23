@@ -6,7 +6,9 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.UpdaterChannel // Import your config-driven enum here!
+import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 
 object ServerUpdater {
     private val logger = KotlinLogging.logger {}
@@ -60,7 +62,14 @@ object ServerUpdater {
             .execute()
             .use { response ->
                 if (!response.isSuccessful) error("Failed to download jar (${response.code})")
-                destPath.toFile().outputStream().use { response.body.byteStream().copyTo(it) }
+                // download next to the target first, so a failed download does not leave a broken server jar behind
+                val tempPath = destPath.resolveSibling("${destPath.fileName}.part")
+                try {
+                    tempPath.toFile().outputStream().use { response.body.byteStream().copyTo(it) }
+                    Files.move(tempPath, destPath, StandardCopyOption.REPLACE_EXISTING)
+                } finally {
+                    Files.deleteIfExists(tempPath)
+                }
             }
     }
 }

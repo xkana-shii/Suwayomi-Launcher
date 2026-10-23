@@ -17,7 +17,6 @@ import suwayomi.tachidesk.launcher.jTextArea
 import suwayomi.tachidesk.launcher.jbutton
 import suwayomi.tachidesk.launcher.jpanel
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.UpdaterChannel // Use your config enum here!
-import java.nio.file.Paths
 import javax.swing.DefaultComboBoxModel
 import javax.swing.JComboBox
 import javax.swing.JOptionPane
@@ -47,7 +46,7 @@ fun ServerUpdate(
         actions()
             .onEach {
                 isEnabled = false
-                val serverJarPath = Paths.get("bin", "Suwayomi-Server.jar")
+                val serverJarPath = LauncherViewModel.tachideskServer
                 scope.launch(Dispatchers.IO) {
                     val result = ServerUpdater.updateServerJar(serverJarPath, vm.serverUpdateChannel.value)
                     launch(Dispatchers.Swing) {
