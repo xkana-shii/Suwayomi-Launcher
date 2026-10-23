@@ -39,11 +39,6 @@ class LauncherSettings {
         Preview,
     }
 
-    enum class SortOrder {
-        ASC,
-        DESC,
-    }
-
     enum class AuthMode {
         NONE,
         BASIC_AUTH,
@@ -51,37 +46,9 @@ class LauncherSettings {
         UI_LOGIN,
     }
 
-    enum class KoreaderSyncChecksumMethod {
-        BINARY,
-        FILENAME,
-    }
-
-    enum class KoreaderSyncStrategy {
-        PROMPT,
-        SILENT,
-        SEND,
-        RECEIVE,
-        DISABLED,
-    }
-
-    enum class KoreaderSyncConflictStrategy {
-        PROMPT,
-        KEEP_LOCAL,
-        KEEP_REMOTE,
-        DISABLED,
-    }
-
     enum class DatabaseType {
         H2,
         POSTGRESQL,
-    }
-
-    enum class CbzMediaType(
-        val mediaType: String,
-    ) {
-        MODERN("application/vnd.comicbook+zip"),
-        LEGACY("application/x-cbz"),
-        COMPATIBLE("application/x-cbr"),
     }
 
     fun rootDir(): LauncherPreference<String?> =

@@ -16,11 +16,7 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.AuthMode
-import suwayomi.tachidesk.launcher.settings.LauncherSettings.CbzMediaType
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.DatabaseType
-import suwayomi.tachidesk.launcher.settings.LauncherSettings.KoreaderSyncChecksumMethod
-import suwayomi.tachidesk.launcher.settings.LauncherSettings.KoreaderSyncConflictStrategy
-import suwayomi.tachidesk.launcher.settings.LauncherSettings.SortOrder
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.UpdaterChannel
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.WebUIChannel
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.WebUIFlavor
@@ -84,12 +80,7 @@ class ServerConfig(
     // downloader
     val downloadAsCbz: MutableStateFlow<Boolean> by OverrideConfigValue()
     val downloadsPath: MutableStateFlow<String> by OverrideConfigValue()
-    val autoDownloadNewChapters: MutableStateFlow<Boolean> by OverrideConfigValue()
-    val excludeEntryWithUnreadChapters: MutableStateFlow<Boolean> by OverrideConfigValue()
-    val autoDownloadNewChaptersLimit: MutableStateFlow<Int> by OverrideConfigValue()
-    val autoDownloadIgnoreReUploads: MutableStateFlow<Boolean> by OverrideConfigValue()
     val downloadConversions: MutableStateFlow<Map<String, DownloadConversion>> by OverrideConfigValue()
-    val serveConversions: MutableStateFlow<Map<String, DownloadConversion>> by OverrideConfigValue()
 
     data class DownloadConversion(
         val target: String,
@@ -100,17 +91,13 @@ class ServerConfig(
     )
 
     // extensions
-    val extensionRepos: MutableStateFlow<List<String>> by OverrideConfigValue()
+    val extensionStores: MutableStateFlow<List<String>> by OverrideConfigValue()
 
     // requests
     val maxSourcesInParallel: MutableStateFlow<Int> by OverrideConfigValue()
 
     // updater
-    val excludeUnreadChapters: MutableStateFlow<Boolean> by OverrideConfigValue()
-    val excludeNotStarted: MutableStateFlow<Boolean> by OverrideConfigValue()
-    val excludeCompleted: MutableStateFlow<Boolean> by OverrideConfigValue()
     val globalUpdateInterval: MutableStateFlow<Double> by OverrideConfigValue()
-    val updateMangas: MutableStateFlow<Boolean> by OverrideConfigValue()
 
     // Authentication
     val authMode: MutableStateFlow<AuthMode> by OverrideConfigValue()
@@ -151,28 +138,14 @@ class ServerConfig(
     val flareSolverrSessionTtl: MutableStateFlow<Int> by OverrideConfigValue()
     val flareSolverrAsResponseFallback: MutableStateFlow<Boolean> by OverrideConfigValue()
 
-    // opds settings
-    val opdsUseBinaryFileSizes: MutableStateFlow<Boolean> by OverrideConfigValue()
-    val opdsItemsPerPage: MutableStateFlow<Int> by OverrideConfigValue()
-    val opdsEnablePageReadProgress: MutableStateFlow<Boolean> by OverrideConfigValue()
-    val opdsMarkAsReadOnDownload: MutableStateFlow<Boolean> by OverrideConfigValue()
-    val opdsShowOnlyUnreadChapters: MutableStateFlow<Boolean> by OverrideConfigValue()
-    val opdsShowOnlyDownloadedChapters: MutableStateFlow<Boolean> by OverrideConfigValue()
-    val opdsChapterSortOrder: MutableStateFlow<SortOrder> by OverrideConfigValue()
-    val opdsCbzMimetype: MutableStateFlow<CbzMediaType> by OverrideConfigValue()
-
-    // koreader sync
-    val koreaderSyncChecksumMethod: MutableStateFlow<KoreaderSyncChecksumMethod> by OverrideConfigValue()
-    val koreaderSyncPercentageTolerance: MutableStateFlow<Double> by OverrideConfigValue()
-    val koreaderSyncStrategyForward: MutableStateFlow<KoreaderSyncConflictStrategy> by OverrideConfigValue()
-    val koreaderSyncStrategyBackward: MutableStateFlow<KoreaderSyncConflictStrategy> by OverrideConfigValue()
-
     // database
     val databaseType: MutableStateFlow<DatabaseType> by OverrideConfigValue()
     val databaseUrl: MutableStateFlow<String> by OverrideConfigValue()
     val databaseUsername: MutableStateFlow<String> by OverrideConfigValue()
     val databasePassword: MutableStateFlow<String> by OverrideConfigValue()
     val useHikariConnectionPool: MutableStateFlow<Boolean> by OverrideConfigValue()
+    val hikariMaxPoolSize: MutableStateFlow<Int> by OverrideConfigValue()
+    val databaseSchema: MutableStateFlow<String> by OverrideConfigValue()
 
     // webview
     val kcefEnabled: MutableStateFlow<Boolean> by OverrideConfigValue()

@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import suwayomi.tachidesk.launcher.config.ConfigManager
 import suwayomi.tachidesk.launcher.config.DownloadConversionType
 import suwayomi.tachidesk.launcher.config.DurationType
@@ -29,11 +28,7 @@ import suwayomi.tachidesk.launcher.config.MutableStateFlowType
 import suwayomi.tachidesk.launcher.config.ServerConfig
 import suwayomi.tachidesk.launcher.settings.LauncherPreference
 import suwayomi.tachidesk.launcher.settings.LauncherSettings
-import suwayomi.tachidesk.launcher.settings.LauncherSettings.CbzMediaType
 import suwayomi.tachidesk.launcher.settings.LauncherSettings.DatabaseType
-import suwayomi.tachidesk.launcher.settings.LauncherSettings.KoreaderSyncChecksumMethod
-import suwayomi.tachidesk.launcher.settings.LauncherSettings.KoreaderSyncConflictStrategy
-import suwayomi.tachidesk.launcher.settings.LauncherSettings.SortOrder
 import suwayomi.tachidesk.launcher.util.checkIfPortInUse
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -101,25 +96,14 @@ class LauncherViewModel {
     // Downloader
     val downloadAsCbz = config.asStateFlow { it.downloadAsCbz }
     val downloadsPath = config.asStateFlow { it.downloadsPath }
-    val autoDownloadNewChapters = config.asStateFlow { it.autoDownloadNewChapters }
-    val excludeEntryWithUnreadChapters = config.asStateFlow { it.excludeEntryWithUnreadChapters }
-    val autoDownloadNewChaptersLimit = config.asStateFlow { it.autoDownloadNewChaptersLimit }
-    val autoDownloadIgnoreReUploads = config.asStateFlow { it.autoDownloadIgnoreReUploads }
     val downloadConversions = config.asStateFlow { it.downloadConversions }
-    val serveConversions = config.asStateFlow { it.serveConversions }
 
-    // Extension
-    val extensionRepos = config.asStateFlow { it.extensionRepos }
-
-    // Requests
+    // Extension/Source
+    val extensionStores = config.asStateFlow { it.extensionStores }
     val maxSourcesInParallel = config.asStateFlow { it.maxSourcesInParallel }
 
     // Updater
-    val excludeUnreadChapters = config.asStateFlow { it.excludeUnreadChapters }
-    val excludeNotStarted = config.asStateFlow { it.excludeNotStarted }
-    val excludeCompleted = config.asStateFlow { it.excludeCompleted }
     val globalUpdateInterval = config.asStateFlow { it.globalUpdateInterval }
-    val updateMangas = config.asStateFlow { it.updateMangas }
 
     // Authentication
     val authMode = config.asStateFlow { it.authMode }
@@ -160,29 +144,16 @@ class LauncherViewModel {
     val flareSolverrSessionTtl = config.asStateFlow { it.flareSolverrSessionTtl }
     val flareSolverrAsResponseFallback = config.asStateFlow { it.flareSolverrAsResponseFallback }
 
-    // opds settings
-    val opdsUseBinaryFileSizes: MutableStateFlow<Boolean> = config.asStateFlow { it.opdsUseBinaryFileSizes }
-    val opdsItemsPerPage: MutableStateFlow<Int> = config.asStateFlow { it.opdsItemsPerPage }
-    val opdsEnablePageReadProgress: MutableStateFlow<Boolean> = config.asStateFlow { it.opdsEnablePageReadProgress }
-    val opdsMarkAsReadOnDownload: MutableStateFlow<Boolean> = config.asStateFlow { it.opdsMarkAsReadOnDownload }
-    val opdsShowOnlyUnreadChapters: MutableStateFlow<Boolean> = config.asStateFlow { it.opdsShowOnlyUnreadChapters }
-    val opdsShowOnlyDownloadedChapters: MutableStateFlow<Boolean> = config.asStateFlow { it.opdsShowOnlyDownloadedChapters }
-    val opdsChapterSortOrder: MutableStateFlow<SortOrder> = config.asStateFlow { it.opdsChapterSortOrder }
-    val opdsCbzMimetype: MutableStateFlow<CbzMediaType> = config.asStateFlow { it.opdsCbzMimetype }
-
-    // koreader sync
-    val koreaderSyncChecksumMethod: MutableStateFlow<KoreaderSyncChecksumMethod> = config.asStateFlow { it.koreaderSyncChecksumMethod }
-    val koreaderSyncPercentageTolerance: MutableStateFlow<Double> = config.asStateFlow { it.koreaderSyncPercentageTolerance }
-    val koreaderSyncStrategyForward: MutableStateFlow<KoreaderSyncConflictStrategy> = config.asStateFlow { it.koreaderSyncStrategyForward }
-    val koreaderSyncStrategyBackward: MutableStateFlow<KoreaderSyncConflictStrategy> =
-        config.asStateFlow { it.koreaderSyncStrategyBackward }
-
+    // Database
     val databaseType: MutableStateFlow<DatabaseType> = config.asStateFlow { it.databaseType }
     val databaseUrl: MutableStateFlow<String> = config.asStateFlow { it.databaseUrl }
     val databaseUsername: MutableStateFlow<String> = config.asStateFlow { it.databaseUsername }
     val databasePassword: MutableStateFlow<String> = config.asStateFlow { it.databasePassword }
     val useHikariConnectionPool: MutableStateFlow<Boolean> = config.asStateFlow { it.useHikariConnectionPool }
+    val hikariMaxPoolSize: MutableStateFlow<Int> = config.asStateFlow { it.hikariMaxPoolSize }
+    val databaseSchema: MutableStateFlow<String> = config.asStateFlow { it.databaseSchema }
 
+    // WebView
     val kcefEnabled: MutableStateFlow<Boolean> = config.asStateFlow { it.kcefEnabled }
 
     val serverUpdateChannel = config.asStateFlow { it.serverUpdateChannel }

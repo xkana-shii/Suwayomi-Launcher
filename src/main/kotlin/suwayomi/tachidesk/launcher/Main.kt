@@ -30,10 +30,8 @@ import suwayomi.tachidesk.launcher.ui.Conversions
 import suwayomi.tachidesk.launcher.ui.Database
 import suwayomi.tachidesk.launcher.ui.Downloader
 import suwayomi.tachidesk.launcher.ui.Extension
-import suwayomi.tachidesk.launcher.ui.KoReaderSync
 import suwayomi.tachidesk.launcher.ui.LocalSource
 import suwayomi.tachidesk.launcher.ui.Misc
-import suwayomi.tachidesk.launcher.ui.Opds
 import suwayomi.tachidesk.launcher.ui.Requests
 import suwayomi.tachidesk.launcher.ui.RootDir
 import suwayomi.tachidesk.launcher.ui.ServerIpAndPortBindings
@@ -97,7 +95,7 @@ suspend fun main(args: Array<String>) {
         setupTheme(vm)
 
         jframe("Suwayomi-Server Launcher") {
-            size = Dimension(410, 650)
+            size = Dimension(410, 660)
 
             val iconUrl =
                 checkNotNull(object {}.javaClass.getResource("/suwayomi.png")) {
@@ -139,8 +137,6 @@ suspend fun main(args: Array<String>) {
                         addTab("Local Source", LocalSource(vm, scope))
                         addTab("Requests", Requests(vm, scope))
                         addTab("Cloudflare", Cloudflare(vm, scope))
-                        addTab("Opds", Opds(vm, scope))
-                        addTab("KOReader", KoReaderSync(vm, scope))
                         addTab("Database", Database(vm, scope))
                         addTab("Webview", Webview(vm, scope))
                         addTab("Root Directory", RootDir(vm, scope))
