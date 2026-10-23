@@ -226,6 +226,9 @@ class LauncherViewModel {
 
             val jarFile = tachideskServer.absolutePathString()
             val properties = settings.getProperties().toMutableList()
+            if (settings.rootDir().get() == null) {
+                properties.add(LauncherPreference.ARG_PREFIX + "rootDir=" + getDefaultRootDir())
+            }
             if (
                 (forceElectron || webUIInterface.value == LauncherSettings.WebUIInterface.Electron) &&
                 (electronPath.value.isBlank() || Path(electronPath.value).notExists())
@@ -268,7 +271,7 @@ class LauncherViewModel {
     private fun getServerConfig(rootDir: String?): ServerConfig {
         val resolvedRootDir =
             rootDir
-                ?: AppDirs { appName = "Suwayomi" }.getUserDataDir()
+                ?: getDefaultRootDir()
 
         val configManager = ConfigManager(tachideskServer, resolvedRootDir)
 
@@ -298,7 +301,21 @@ class LauncherViewModel {
             homeDir / "bin" / "Suwayomi-Server.jar"
         }
 
-        private fun getRootDir(rootDir: String?): String = rootDir ?: AppDirs { appName = "Suwayomi" }.getUserDataDir()
+        private fun getRootDir(rootDir: String?): String = rootDir ?: getDefaultRootDir()
+
+        /**
+         * fork: data dir used when none is configured. The fork prefers a "Suwayomi" data dir, but the server defaults
+         * to "Tachidesk", so "Suwayomi" is only used if it exists (and is then passed to the server, see [launch]);
+         * otherwise launcher and server would read different server.conf files.
+         */
+        fun getDefaultRootDir(): String {
+            val suwayomiDir = AppDirs { appName = "Suwayomi" }.getUserDataDir()
+            return if (Path(suwayomiDir).exists()) {
+                suwayomiDir
+            } else {
+                AppDirs { appName = "Tachidesk" }.getUserDataDir()
+            }
+        }
 
         fun reset() {
             val settings = LauncherSettings()
